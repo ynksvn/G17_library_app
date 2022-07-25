@@ -1,113 +1,45 @@
 package com.cydeo.library.step_definitions;
 
-import com.cydeo.library.pages.LandingPage;
 import com.cydeo.library.pages.LoginPage;
-import com.cydeo.library.utilities.BrowserUtils;
 import com.cydeo.library.utilities.ConfigurationReader;
 import com.cydeo.library.utilities.Driver;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginStepDef {
+
     LoginPage loginPage = new LoginPage();
-    LandingPage landingPage = new LandingPage();
-    WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 10);
 
-    @Given("I am on the login page")
-    public void i_am_on_the_login_page() {
+    @Given("librarian is on the login page")
+    public void librarian_is_on_the_login_page() {
         Driver.getDriver().get(ConfigurationReader.getProperty("qa2_url"));
-    }
 
-    @When("I login as a librarian")
-    public void i_login_as_a_librarian() {
+    }
+    @Then("verify that the title is {string}")
+    public void verify_that_the_title_is(String title) {
+
+        String actualTitle = Driver.getDriver().getTitle();
+        Assert.assertTrue(Driver.getDriver().getTitle().contains(actualTitle));
+
+
+    }
+    @When("librarian enters valid email address and password")
+    public void librarian_enters_valid_email_address_and_password() {
         loginPage.emailInput.sendKeys(ConfigurationReader.getProperty("lib22_user"));
         loginPage.passwordInput.sendKeys(ConfigurationReader.getProperty("lib22_pass"));
+    }
+    @When("librarian clicks sign in button")
+    public void librarian_clicks_sign_in_button() {
         loginPage.signinBtn.click();
     }
 
-    @Then("dashboard should be displayed")
-    public void dashboard_should_be_displayed() {
-
-        wait.until(ExpectedConditions.urlContains("dashboard"));
-        String expected = "dashboard";
-        String actualURL = Driver.getDriver().getCurrentUrl();
-        Assert.assertTrue("dashboard is not appearing on the URL", actualURL.contains(expected));
-    }
-
-    @When("I login as a student")
-    public void i_login_as_a_student() {
-        loginPage.emailInput.sendKeys(ConfigurationReader.getProperty("student55_user"));
-        loginPage.passwordInput.sendKeys(ConfigurationReader.getProperty("student55_pass"));
-        loginPage.signinBtn.click();
-    }
-
-    @Then("books should be displayed")
-    public void books_should_be_displayed() {
-        wait.until(ExpectedConditions.urlContains("dashboard"));
-        String expected = "books";
-        String actualURL = Driver.getDriver().getCurrentUrl();
-        Assert.assertTrue("books is not appearing on the URL", actualURL.contains(expected));
-    }
-
-    @When("I enter username {string}")
-    public void i_enter_username(String username) {
-        loginPage.emailInput.sendKeys(username);
-    }
-
-    @When("I enter password {string}")
-    public void i_enter_password(String password) {
-        loginPage.passwordInput.sendKeys(password);
-    }
-
-    @When("click the sign in button")
-    public void click_the_sign_in_button() {
-        loginPage.signinBtn.click();
-    }
-
-    @When("there should be {string} users")
-    public void there_should_be_users(String expectedUserCount) {
-        String actualUserCount = landingPage.userCount.getText();
-        Assert.assertEquals("User count is failing",expectedUserCount,actualUserCount);
-    }
-/* this part is the same as line 73-76, instead od using String, we can use Int
-    @And("there should be {int} users")
-    public void thereShouldBeUsers(int expectedUserCount) {
-        //String expectedUserNum = expectedUserCount + "";
-        String expectedUserNum = String.valueOf(expectedUserCount);
-        String actualUserCount = landingPage.userCount.getText();
-        Assert.assertEquals("User count is failing",expectedUserNum,actualUserCount);
-    }
-
- */
-
-    @And("there should be {int} users")
-    public void thereShouldBeUsers(int expectedUserCount) {
-        //String expecteduserNum = expectedUserCount+"";
-        String expectectedUserNum = String.valueOf(expectedUserCount);
-
-        BrowserUtils.waitForVisibility(landingPage.userCount,10);
-        String actualUserCount = landingPage.userCount.getText();
-        Assert.assertEquals("User count is failing!",expectectedUserNum,actualUserCount);
-    }
-
-    @When("I login using {string} and {string}")
-    public void i_login_using_and(String username, String password) {
-        loginPage.emailInput.sendKeys(username);
-        loginPage.passwordInput.sendKeys(password);
-        loginPage.signinBtn.click();
-    }
-    @Then("account holder name should be {string}")
-    public void account_holder_name_should_be(String expectedUserName) {
-
-        BrowserUtils.waitForVisibility(landingPage.dashboardLink,5);
-        String actualUserName = landingPage.userNameLink.getText();
-        Assert.assertEquals(expectedUserName,actualUserName);
+    @Then("verify that there are {int} models on the page")
+    public void verify_that_there_are_models_on_the_page(int dashboard) {
+        Assert.assertTrue(loginPage.dashboard.isDisplayed());
 
     }
+
+
 }

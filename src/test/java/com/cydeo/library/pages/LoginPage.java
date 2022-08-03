@@ -17,9 +17,12 @@ public class LoginPage {
     @FindBy(xpath = "//button")
     public WebElement signinBtn;
 
-    // No page elements added
+    @FindBy (id="dashboard")
+    public WebElement dashboard;
+
 
     public LoginPage() {
+
         PageFactory.initElements(Driver.getDriver(), this);
     }
 }
